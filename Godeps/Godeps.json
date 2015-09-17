@@ -1,0 +1,34 @@
+{
+	"ImportPath": "github.com/nextrevision/sapt",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/alecthomas/template",
+			"Rev": "b867cc6ab45cece8143cfcc6fc9c77cf3f2c23c0"
+		},
+		{
+			"ImportPath": "github.com/alecthomas/units",
+			"Rev": "6b4e7dc5e3143b85ea77909c72caf89416fc2915"
+		},
+		{
+			"ImportPath": "github.com/goamz/goamz/aws",
+			"Rev": "3920e057042def516e73870ea031859415219bce"
+		},
+		{
+			"ImportPath": "github.com/goamz/goamz/s3",
+			"Rev": "3920e057042def516e73870ea031859415219bce"
+		},
+		{
+			"ImportPath": "github.com/vaughan0/go-ini",
+			"Rev": "a98ad7ee00ec53921f08832bc06ecf7fd600e6a1"
+		},
+		{
+			"ImportPath": "gopkg.in/alecthomas/kingpin.v2",
+			"Comment": "v2.0.13",
+			"Rev": "7e5154fc5c52e3f955a54a123da207f0e0b1ac82"
+		}
+	]
+}
