@@ -3,9 +3,11 @@ package sapt
 import (
 	"bytes"
 	"compress/gzip"
-	"os"
+	"log"
+	"net/http"
 	"path/filepath"
 	"regexp"
+	"sync"
 	"text/template"
 
 	"github.com/goamz/goamz/s3"
@@ -27,14 +29,34 @@ type Index struct {
 	Content []byte
 }
 
-func RescanBucket(s *S3) {
+func ScanBucketPackages(conn *S3) {
 	packages := []PackageMetadata{}
-	contents := s.GetBucketContents()
+	contents := conn.getBucketContents()
 	packageList := getBucketPackages(contents)
+
+	var wg sync.WaitGroup
+	wg.Add(len(packageList))
+	headerChan := make(chan http.Header, 10)
 	for _, pkg := range packageList {
-		m := MetadataFromHeaders(s.GetObjectHeaders(pkg))
-		packages = append(packages, *m)
+		go func(pkg string) {
+			headerChan <- conn.getObjectHeaders(pkg)
+		}(pkg)
 	}
+	for i := 0; i < len(packageList); i++ {
+		go func() {
+			for {
+				headers, ok := <-headerChan
+				if !ok {
+					break
+				}
+				m := MetadataFromHeaders(headers)
+				packages = append(packages, *m)
+				wg.Done()
+			}
+		}()
+	}
+	wg.Wait()
+
 	packageIndex := createPackageIndex(packages)
 
 	indicies := getIndexPaths(contents)
@@ -43,7 +65,7 @@ func RescanBucket(s *S3) {
 	}
 	for _, index := range indicies {
 		index.Content = packageIndex
-		s.UploadPackageIndex(&index)
+		conn.uploadPackageIndex(&index)
 	}
 }
 
@@ -51,7 +73,6 @@ func getIndexPaths(contents *map[string]s3.Key) []Index {
 	indicies := []Index{}
 	pathRe := regexp.MustCompile(`^(.*)/Packages.gz$`)
 
-	// TODO: err handle
 	for key := range *contents {
 		result := pathRe.FindStringSubmatch(key)
 		if result != nil {
@@ -65,7 +86,6 @@ func getIndexPaths(contents *map[string]s3.Key) []Index {
 func getBucketPackages(contents *map[string]s3.Key) []string {
 	packages := []string{}
 
-	// TODO: err handle
 	for key := range *contents {
 		if filepath.Ext(key) == ".deb" {
 			packages = append(packages, key)
@@ -78,9 +98,10 @@ func createPackageIndex(packages []PackageMetadata) []byte {
 	var buf bytes.Buffer
 	writer := gzip.NewWriter(&buf)
 
-	// TODO: err handles
-	t, _ := template.New("Package Template").Parse(packagesTemplate)
-	t.Execute(os.Stdout, packages)
+	t, err := template.New("Package Template").Parse(packagesTemplate)
+	if err != nil {
+		log.Fatal(err)
+	}
 	t.Execute(writer, packages)
 
 	writer.Close()

@@ -19,8 +19,12 @@ type S3 struct {
 }
 
 func ConnectS3(bucket string, region string, public bool) *S3 {
+	var acl s3.ACL
+	var auth aws.Auth
+	var err error
+
 	// set auth
-	auth, err := aws.EnvAuth()
+	auth, err = aws.EnvAuth()
 	if err != nil {
 		auth, err = aws.SharedAuth()
 		if err != nil {
@@ -37,7 +41,7 @@ func ConnectS3(bucket string, region string, public bool) *S3 {
 	}
 	awsRegion := aws.Regions[region]
 
-	acl := s3.ACL("private")
+	acl = s3.ACL("private")
 	if public {
 		acl = s3.ACL("public-read")
 	}
@@ -57,7 +61,13 @@ func ConnectS3(bucket string, region string, public bool) *S3 {
 	}
 }
 
-func (s *S3) UploadPackage(pkg *Package) {
+func (s *S3) CreateBucket() {
+	if err := s.Bucket.PutBucket(s.ACL); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (s *S3) uploadPackage(pkg *Package) {
 	fileType := http.DetectContentType(pkg.Content)
 
 	opts := s3.Options{
@@ -70,7 +80,7 @@ func (s *S3) UploadPackage(pkg *Package) {
 	fmt.Printf("Uploaded %s\n", pkg.Path)
 }
 
-func (s *S3) UploadPackageIndex(index *Index) {
+func (s *S3) uploadPackageIndex(index *Index) {
 	path := fmt.Sprintf("%s/Packages.gz", index.Path)
 	fileType := http.DetectContentType(index.Content)
 	opts := s3.Options{}
@@ -80,15 +90,19 @@ func (s *S3) UploadPackageIndex(index *Index) {
 	fmt.Printf("Uploaded Package Index %s/Packages.gz\n", index.Path)
 }
 
-func (s *S3) GetBucketContents() *map[string]s3.Key {
-	contents, _ := s.Bucket.GetBucketContents()
+func (s *S3) getBucketContents() *map[string]s3.Key {
+	contents, err := s.Bucket.GetBucketContents()
+	if err != nil {
+		log.Fatal(err)
+	}
 	return contents
 }
 
-func (s *S3) GetObjectHeaders(object string) http.Header {
+func (s *S3) getObjectHeaders(object string) http.Header {
 	headers := map[string][]string{}
-	// TODO: err handle
-	response, _ := s.Bucket.Head(object, headers)
-
+	response, err := s.Bucket.Head(object, headers)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return response.Header
 }

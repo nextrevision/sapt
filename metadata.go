@@ -35,11 +35,13 @@ type PackageMetadata struct {
 	Vendor             string `json:"X-Amz-Meta-Vendor"`
 }
 
-func MetadataFromFile(file *os.File) *PackageMetadata {
+func MetadataFromFile(path string) *PackageMetadata {
 	metadata := PackageMetadata{}
 
-	path := file.Name()
-	stat, _ := os.Stat(path)
+	stat, err := os.Stat(path)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	dpkgOut, err := exec.Command("dpkg-deb", "-f", path).Output()
 	if err != nil {
@@ -106,7 +108,10 @@ func MetadataFromHeaders(headers http.Header) *PackageMetadata {
 	for key, value := range headers {
 		mapping[key] = value[0]
 	}
-	jsonMapping, _ := json.Marshal(mapping)
+	jsonMapping, err := json.Marshal(mapping)
+	if err != nil {
+		log.Fatal(err)
+	}
 	json.Unmarshal(jsonMapping, &metadata)
 	return &metadata
 }
