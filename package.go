@@ -77,9 +77,9 @@ func NewPackage(path string, basePath string) *Package {
 	// retrieve metadata
 	metadata := MetadataFromFile(path)
 	metadata.Filename = name
-	metadata.MD5sum = Hash(content, "md5")
-	metadata.SHA1 = Hash(content, "sha1")
-	metadata.SHA256 = Hash(content, "sha256")
+	metadata.MD5sum = hash(content, "md5")
+	metadata.SHA1 = hash(content, "sha1")
+	metadata.SHA256 = hash(content, "sha256")
 
 	return &Package{
 		Path:     name,
@@ -88,7 +88,7 @@ func NewPackage(path string, basePath string) *Package {
 	}
 }
 
-func Hash(content []byte, crypto string) string {
+func hash(content []byte, crypto string) string {
 	var hash string
 
 	if crypto == "md5" {

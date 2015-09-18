@@ -71,7 +71,7 @@ func (s *S3) uploadPackage(pkg *Package) {
 	fileType := http.DetectContentType(pkg.Content)
 
 	opts := s3.Options{
-		Meta: MetadataToMap(*pkg.Metadata),
+		Meta: metadataToMap(*pkg.Metadata),
 	}
 
 	if err := s.Bucket.Put(pkg.Path, pkg.Content, fileType, s.ACL, opts); err != nil {

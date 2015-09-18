@@ -116,7 +116,7 @@ func MetadataFromHeaders(headers http.Header) *PackageMetadata {
 	return &metadata
 }
 
-func MetadataToMap(pm PackageMetadata) map[string][]string {
+func metadataToMap(pm PackageMetadata) map[string][]string {
 	mapping := map[string][]string{}
 	v := reflect.ValueOf(pm)
 	t := v.Type()
