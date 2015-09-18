@@ -60,6 +60,13 @@ Rescan the bucket and generate new indicies:
 
     sapt rescan my-s3-apt-repo
 
+### Authentication
+
+`sapt` first looks for AWS credentials passed via environment variables
+(`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`). If none are specified,
+`~/.aws/credentials` is consulted. If neither method produces valid credentials,
+an error will be thrown.
+
 ### Public and Private Sources
 
 Buckets and their contents can either be public or private. Apt client
