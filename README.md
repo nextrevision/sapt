@@ -15,11 +15,17 @@ their metadata attributes.
 
 * dpkg-deb
 
+## Installation
+
+Directly with go:
+
+    go get github.com/nextrevision/sapt
+
 ## Usage
 
     usage: sapt [<flags>] <command> [<args> ...]
 
-    A humble S3 apt manager
+    S3 apt repo utility that manages all packages remotely without a local mirror
 
     Flags:
       --help  Show help (also see --help-long and --help-man).
@@ -49,7 +55,7 @@ Rescan the bucket and generate new indicies:
 
     sapt rescan my-s3-apt-repo
 
-### Public and Private Paths
+### Public and Private Sources
 
 Buckets and their contents can either be public or private. Apt client
 configurations vary depending on this.
@@ -70,7 +76,7 @@ Private repo sample `sources.list` entry (requires apt-transport-s3):
 
 Note the secret key is surrounded with brackets intentionally.
 
-### Using with [apt-transport-s3(https://github.com/kyleshank/apt-transport-s3)]
+### Using with [apt-transport-s3](https://github.com/kyleshank/apt-transport-s3)
 
 `sapt` is designed to work with [apt-transport-s3(https://github.com/kyleshank/apt-transport-s3)] in mind. Simply use `sapt`
 to upload your packages and then use apt-transport-s3 to access them on your client systems.

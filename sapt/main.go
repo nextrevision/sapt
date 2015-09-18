@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	app = kingpin.New("sapt", "A humble S3 apt manager")
+	app = kingpin.New("sapt", "S3 apt repo utility that manages all packages remotely without a local mirror")
 
 	bootstrap       = app.Command("bootstrap", "Bootstraps a new bucket")
 	bootstrapPublic = bootstrap.Flag("public", "Make uploaded packages public").Bool()
