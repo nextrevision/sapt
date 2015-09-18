@@ -103,7 +103,7 @@ Download dependencies:
 
 Create a public repo with sapt:
 
-     boossapttrap --public my-s3-public-repo
+     sapt bootstrap --public my-s3-public-repo
 
 Download and create a package for apt-transport-s3:
 
