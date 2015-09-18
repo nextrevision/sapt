@@ -4,11 +4,11 @@ sapt
 `sapt` is a s3 apt repo utility that manages all packages remotely without a local mirror.
 
 Traditionally, one would need to store all packages locally on disk and run
-`dpkg-scanpackages` or similar tool to generate indicies for apt. If s3 storage
+`dpkg-scanpackages` or similar tool to generate indices for apt. If s3 storage
 is desired, a sync operation would then need to be performed, uploading new
-packages as well as the repo indicies. `sapt` removes the need for keeping a
+packages as well as the repo indices. `sapt` removes the need for keeping a
 local mirror on disk by storing package metadata along with the package in s3.
-Repo indicies are then generated and uploaded to s3 by quering each package for
+Repo indices are then generated and uploaded to s3 by quering each package for
 their metadata attributes.
 
 ## Requirements
@@ -46,7 +46,7 @@ their metadata attributes.
         Uploads deb packages to S3
 
       rescan [<flags>] <bucket> [<region>]
-        Rescan the bucket and generate new indicies
+        Rescan the bucket and generate new indices
 
 Create a new private bucket:
 
@@ -56,7 +56,7 @@ Upload packages to the bucket:
 
     sapt upload ./packages/ my-s3-apt-repo
 
-Rescan the bucket and generate new indicies:
+Rescan the bucket and generate new indices:
 
     sapt rescan my-s3-apt-repo
 

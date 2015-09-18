@@ -59,28 +59,28 @@ func ScanBucketPackages(conn *S3) {
 
 	packageIndex := createPackageIndex(packages)
 
-	indicies := getIndexPaths(contents)
-	if len(indicies) == 0 {
-		indicies = append(indicies, Index{Path: "repo"})
+	indices := getIndexPaths(contents)
+	if len(indices) == 0 {
+		indices = append(indices, Index{Path: "repo"})
 	}
-	for _, index := range indicies {
+	for _, index := range indices {
 		index.Content = packageIndex
 		conn.uploadPackageIndex(&index)
 	}
 }
 
 func getIndexPaths(contents *map[string]s3.Key) []Index {
-	indicies := []Index{}
+	indices := []Index{}
 	pathRe := regexp.MustCompile(`^(.*)/Packages.gz$`)
 
 	for key := range *contents {
 		result := pathRe.FindStringSubmatch(key)
 		if result != nil {
 			index := Index{Path: result[1]}
-			indicies = append(indicies, index)
+			indices = append(indices, index)
 		}
 	}
-	return indicies
+	return indices
 }
 
 func getBucketPackages(contents *map[string]s3.Key) []string {

@@ -22,7 +22,7 @@ var (
 	uploadBucket = upload.Arg("bucket", "Name of bucket to use").Required().String()
 	uploadRegion = upload.Arg("region", "Region to use (defaults to AWS_REGION then us-east-1").String()
 
-	rescan       = app.Command("rescan", "Rescan the bucket and generate new indicies")
+	rescan       = app.Command("rescan", "Rescan the bucket and generate new indices")
 	rescanPublic = rescan.Flag("public", "Make uploaded packages public").Bool()
 	rescanBucket = rescan.Arg("bucket", "Name of bucket to use").Required().String()
 	rescanRegion = rescan.Arg("region", "Region to use (defaults to AWS_REGION then us-east-1").String()
