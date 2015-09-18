@@ -1,7 +1,7 @@
 sapt
 ====
 
-sapt is a s3 apt repo utility that manages all packages remotely without a local mirror.
+`sapt` is a s3 apt repo utility that manages all packages remotely without a local mirror.
 
 Traditionally, one would need to store all packages locally on disk and run
 `dpkg-scanpackages` or similar tool to generate indicies for apt. If s3 storage
@@ -54,7 +54,7 @@ Create a new private bucket:
 
 Upload packages to the bucket:
 
-    sapt upload ./packages my-s3-apt-repo
+    sapt upload ./packages/ my-s3-apt-repo
 
 Rescan the bucket and generate new indicies:
 
@@ -83,7 +83,7 @@ Note the secret key is surrounded with brackets intentionally.
 
 ### Using with [apt-transport-s3](https://github.com/kyleshank/apt-transport-s3)
 
-`sapt` is designed to work with [apt-transport-s3(https://github.com/kyleshank/apt-transport-s3)] in mind. Simply use `sapt`
+`sapt` is designed to work with [apt-transport-s3](https://github.com/kyleshank/apt-transport-s3) in mind. Simply use `sapt`
 to upload your packages and then use apt-transport-s3 to access them on your client systems.
 
 #### Creating a public bucket with the apt-transport-s3
