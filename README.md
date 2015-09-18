@@ -17,7 +17,20 @@ their metadata attributes.
 
 ## Installation
 
-Directly with go:
+### Binary
+
+OSX:
+
+* [64-bit](https://github.com/nextrevision/sapt/releases/download/0.1.0/sapt_darwin_amd64.zip)
+* [32-bit](https://github.com/nextrevision/sapt/releases/download/0.1.0/sapt_darwin_386.zip)
+
+Linux:
+
+* [64-bit](https://github.com/nextrevision/sapt/releases/download/0.1.0/sapt_linux_amd64.zip)
+* [32-bit](https://github.com/nextrevision/sapt/releases/download/0.1.0/sapt_linux_386.zip)
+* [Arm](https://github.com/nextrevision/sapt/releases/download/0.1.0/sapt_linux_arm.zip)
+
+### Go
 
     go get github.com/nextrevision/sapt
 
