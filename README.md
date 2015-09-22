@@ -99,7 +99,7 @@ This assumes a Ubuntu OS.
 
 Download dependencies:
 
-    apt-get update && apt-get install -y build-essential dpkg-deb wget
+    apt-get update && apt-get install -y build-essential dpkg-dev python-apt-dev libcurl4-openssl-dev debhelper wget unzip
 
 Create a public repo with sapt:
 
