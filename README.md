@@ -108,7 +108,7 @@ Create a public repo with sapt:
 Download and create a package for apt-transport-s3:
 
     wget https://github.com/kyleshank/apt-transport-s3/archive/master.zip
-    unzip apt-transport-s3-master.zip
+    unzip master.zip
     cd apt-transport-s3-master
     make
     dpkg-buildpackage -us -uc && dpkg-deb -b debian/apt-transport-s3
