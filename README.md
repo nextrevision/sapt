@@ -63,7 +63,7 @@ Rescan the bucket and generate new indices:
 ### Authentication
 
 `sapt` first looks for AWS credentials passed via environment variables
-(`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`). If none are specified,
+(`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`). If neither are specified,
 `~/.aws/credentials` is consulted. If neither method produces valid credentials,
 an error will be thrown.
 
