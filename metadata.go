@@ -21,6 +21,8 @@ type PackageMetadata struct {
 	Architecture       string `json:"X-Amz-Meta-Architecture"`
 	Version            string `json:"X-Amz-Meta-Version"`
 	Depends            string `json:"X-Amz-Meta-Depends"`
+	Recommends         string `json:"X-Amz-Meta-Recommends"`
+	Conflicts          string `json:"X-Amz-Meta-Conflicts"`
 	Filename           string `json:"X-Amz-Meta-Filename"`
 	Size               string `json:"X-Amz-Meta-Size"`
 	MD5sum             string `json:"X-Amz-Meta-Md5sum"`
@@ -77,6 +79,10 @@ func MetadataFromFile(path string) *PackageMetadata {
 			metadata.Version = value
 		case "Depends":
 			metadata.Depends = value
+		case "Recommends":
+			metadata.Recommends = value
+		case "Conflicts":
+			metadata.Conflicts = value
 		case "Filename":
 			metadata.Filename = value
 		case "Description":

@@ -21,7 +21,7 @@ SHA1: {{.SHA1}}
 SHA256: {{.SHA256}}
 Size: {{.Size}}
 Installed-Size: {{.InstalledSize}}
-{{if .Architecture}}Architecture: {{.Architecture}}{{printf "\n"}}{{end}}{{if .License}}License: {{.License}}{{printf "\n"}}{{end}}{{if .Vendor}}Vendor: {{.Vendor}}{{printf "\n"}}{{end}}{{if .Maintainer}}Maintainer: {{.Maintainer}}{{printf "\n"}}{{end}}{{if .Section}}Section: {{.Section}}{{printf "\n"}}{{end}}{{if .Priority}}Priority: {{.Priority}}{{printf "\n"}}{{end}}{{if .Homepage}}Homepage: {{.Homepage}}{{printf "\n"}}{{end}}{{if .Description}}Description: {{.Description}}{{printf "\n"}}{{end}}
+{{if .Architecture}}Architecture: {{.Architecture}}{{printf "\n"}}{{end}}{{if .Depends}}Depends: {{.Depends}}{{printf "\n"}}{{end}}{{if .Recommends}}Recommends: {{.Recommends}}{{printf "\n"}}{{end}}{{if .Conflicts}}Conflicts: {{.Conflicts}}{{printf "\n"}}{{end}}{{if .License}}License: {{.License}}{{printf "\n"}}{{end}}{{if .Vendor}}Vendor: {{.Vendor}}{{printf "\n"}}{{end}}{{if .Maintainer}}Maintainer: {{.Maintainer}}{{printf "\n"}}{{end}}{{if .Section}}Section: {{.Section}}{{printf "\n"}}{{end}}{{if .Priority}}Priority: {{.Priority}}{{printf "\n"}}{{end}}{{if .Homepage}}Homepage: {{.Homepage}}{{printf "\n"}}{{end}}{{if .Description}}Description: {{.Description}}{{printf "\n"}}{{end}}
 {{end}}`
 
 type Index struct {
