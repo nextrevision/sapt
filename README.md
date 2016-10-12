@@ -107,7 +107,7 @@ Create a public repo with sapt:
 
      sapt bootstrap --public my-s3-public-repo
 
-Download and create a package for apt-transport-s3:
+Download and create a package for apt-transport-s3 (or just download from here https://launchpad.net/ubuntu/+source/apt-transport-s3):
 
     wget https://github.com/kyleshank/apt-transport-s3/archive/master.zip
     unzip master.zip
