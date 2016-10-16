@@ -1,6 +1,8 @@
 sapt
 ====
 
+[![Build Status](https://travis-ci.org/nextrevision/sapt.svg?branch=master)](https://travis-ci.org/nextrevision/sapt)
+
 `sapt` is a s3 apt repo management utility.
 
 Traditionally, one would need to store all packages locally on disk and run
