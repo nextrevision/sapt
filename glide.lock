@@ -1,0 +1,19 @@
+hash: cbb3d258c3f260a952f23261ea8a9a34ca72d8d4176df538c293d1c6e68d3f8a
+updated: 2016-10-16T12:54:49.857164544-04:00
+imports:
+- name: github.com/alecthomas/template
+  version: b867cc6ab45cece8143cfcc6fc9c77cf3f2c23c0
+  subpackages:
+  - parse
+- name: github.com/alecthomas/units
+  version: 6b4e7dc5e3143b85ea77909c72caf89416fc2915
+- name: github.com/goamz/goamz
+  version: 3920e057042def516e73870ea031859415219bce
+  subpackages:
+  - aws
+  - s3
+- name: github.com/vaughan0/go-ini
+  version: a98ad7ee00ec53921f08832bc06ecf7fd600e6a1
+- name: gopkg.in/alecthomas/kingpin.v2
+  version: e9044be3ab2a8e11d4e1f418d12f0790d57e8d70
+testImports: []
