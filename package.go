@@ -17,7 +17,7 @@ import (
 type Package struct {
 	Path     string
 	Content  []byte
-	Metadata *PackageMetadata
+	Metadata *packageMetadata
 }
 
 func UploadPackages(file *os.File, rm bool, conn *S3) {
@@ -75,7 +75,7 @@ func NewPackage(path string, basePath string) *Package {
 	}
 
 	// retrieve metadata
-	metadata := MetadataFromFile(path)
+	metadata := metadataFromDeb(path)
 	metadata.Filename = name
 	metadata.MD5sum = hash(content, "md5")
 	metadata.SHA1 = hash(content, "sha1")

@@ -30,7 +30,7 @@ type Index struct {
 }
 
 func ScanBucketPackages(conn *S3) {
-	packages := []PackageMetadata{}
+	packages := []packageMetadata{}
 	contents := conn.getBucketContents()
 	packageList := getBucketPackages(contents)
 
@@ -49,7 +49,7 @@ func ScanBucketPackages(conn *S3) {
 				if !ok {
 					break
 				}
-				m := MetadataFromHeaders(headers)
+				m := metadataFromHeaders(headers)
 				packages = append(packages, *m)
 				wg.Done()
 			}
@@ -94,7 +94,7 @@ func getBucketPackages(contents *map[string]s3.Key) []string {
 	return packages
 }
 
-func createPackageIndex(packages []PackageMetadata) []byte {
+func createPackageIndex(packages []packageMetadata) []byte {
 	var buf bytes.Buffer
 	writer := gzip.NewWriter(&buf)
 

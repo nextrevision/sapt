@@ -1,7 +1,7 @@
 package sapt
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,7 +11,8 @@ import (
 	"strings"
 )
 
-type PackageMetadata struct {
+// packageMetadata represents the control information of a package
+type packageMetadata struct {
 	Package            string `json:"X-Amz-Meta-Package"`
 	Priority           string `json:"X-Amz-Meta-Priority"`
 	Section            string `json:"X-Amz-Meta-Section"`
@@ -37,9 +38,9 @@ type PackageMetadata struct {
 	Vendor             string `json:"X-Amz-Meta-Vendor"`
 }
 
-func MetadataFromFile(path string) *PackageMetadata {
-	metadata := PackageMetadata{}
-
+// metadataFromDeb extracts the control information from a deb package
+// returning a packageMetadata representation
+func metadataFromDeb(path string) *packageMetadata {
 	stat, err := os.Stat(path)
 	if err != nil {
 		log.Fatal(err)
@@ -49,14 +50,87 @@ func MetadataFromFile(path string) *PackageMetadata {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, line := range strings.Split(string(dpkgOut), "\n") {
+
+	controlOutput := strings.Split(string(dpkgOut), "\n")
+	metadata := metadataFromControl(controlOutput)
+
+	metadata.Filename = path
+	metadata.Size = strconv.FormatInt(stat.Size(), 10)
+
+	return metadata
+}
+
+// metadataFromHeaders extracts the metadata from S3 object headers
+func metadataFromHeaders(headers http.Header) *packageMetadata {
+	var metadata packageMetadata
+
+	for key, value := range headers {
+		switch key {
+		case "X-Amz-Meta-Package":
+			metadata.Package = value[0]
+		case "X-Amz-Meta-Priority":
+			metadata.Priority = value[0]
+		case "X-Amz-Meta-Section":
+			metadata.Section = value[0]
+		case "X-Amz-Meta-Installed-Size":
+			metadata.InstalledSize = value[0]
+		case "X-Amz-Meta-Maintainer":
+			metadata.Maintainer = value[0]
+		case "X-Amz-Meta-Original-Maintainer":
+			metadata.OriginalMaintainer = value[0]
+		case "X-Amz-Meta-Architecture":
+			metadata.Architecture = value[0]
+		case "X-Amz-Meta-Version":
+			metadata.Version = value[0]
+		case "X-Amz-Meta-Depends":
+			metadata.Depends = value[0]
+		case "X-Amz-Meta-Recommends":
+			metadata.Recommends = value[0]
+		case "X-Amz-Meta-Conflicts":
+			metadata.Conflicts = value[0]
+		case "X-Amz-Meta-Filename":
+			metadata.Filename = value[0]
+		case "X-Amz-Meta-Description":
+			metadata.Description = value[0]
+		case "X-Amz-Meta-Description-md5":
+			metadata.DescriptionMd5 = value[0]
+		case "X-Amz-Meta-Homepage":
+			metadata.Homepage = value[0]
+		case "X-Amz-Meta-Bugs":
+			metadata.Bugs = value[0]
+		case "X-Amz-Meta-Origin":
+			metadata.Origin = value[0]
+		case "X-Amz-Meta-License":
+			metadata.License = value[0]
+		case "X-Amz-Meta-Vendor":
+			metadata.Vendor = value[0]
+		}
+	}
+	return &metadata
+}
+
+// metadataFromControl converts a control file to a packageMetadata object
+func metadataFromControl(control []string) *packageMetadata {
+	metadata := packageMetadata{}
+	inDescription := false
+
+	for _, line := range control {
 		if line == "" {
 			continue
 		}
+
+		if inDescription && strings.HasPrefix(line, " ") {
+			metadata.Description += fmt.Sprintf("%s\n", line)
+			continue
+		} else if inDescription {
+			inDescription = false
+		}
+
 		data := strings.SplitAfterN(line, ":", 2)
 		if len(data) != 2 {
 			continue
 		}
+
 		key := strings.TrimSuffix(data[0], ":")
 		value := strings.TrimSpace(data[1])
 
@@ -86,7 +160,8 @@ func MetadataFromFile(path string) *PackageMetadata {
 		case "Filename":
 			metadata.Filename = value
 		case "Description":
-			metadata.Description = value
+			inDescription = true
+			metadata.Description = fmt.Sprintf("%s\n", value)
 		case "Description-md5":
 			metadata.DescriptionMd5 = value
 		case "Homepage":
@@ -101,28 +176,12 @@ func MetadataFromFile(path string) *PackageMetadata {
 			metadata.Vendor = value
 		}
 	}
-	metadata.Filename = path
-	metadata.Size = strconv.FormatInt(stat.Size(), 10)
+
 	return &metadata
 }
 
-func MetadataFromHeaders(headers http.Header) *PackageMetadata {
-	var metadata PackageMetadata
-	mapping := map[string]string{}
-	// silly song and dance to convert
-	// from map[string][]string to map[string]string
-	for key, value := range headers {
-		mapping[key] = value[0]
-	}
-	jsonMapping, err := json.Marshal(mapping)
-	if err != nil {
-		log.Fatal(err)
-	}
-	json.Unmarshal(jsonMapping, &metadata)
-	return &metadata
-}
-
-func metadataToMap(pm PackageMetadata) map[string][]string {
+// metadataToMap converts packageMetadata to a string map
+func metadataToMap(pm packageMetadata) map[string][]string {
 	mapping := map[string][]string{}
 	v := reflect.ValueOf(pm)
 	t := v.Type()
