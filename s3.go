@@ -11,14 +11,14 @@ import (
 )
 
 type S3 struct {
-	Auth       aws.Auth
-	Region     aws.Region
-	ACL        s3.ACL
-	Bucket     *s3.Bucket
-	Connection *s3.S3
+	Auth   aws.Auth
+	Region aws.Region
+	ACL    s3.ACL
+	bucket *s3.Bucket
+	conn   *s3.S3
 }
 
-func ConnectS3(bucket string, region string, public bool) *S3 {
+func NewS3Connection(bucket string, region string, public bool) *S3 {
 	var acl s3.ACL
 	var auth aws.Auth
 	var err error
@@ -53,16 +53,16 @@ func ConnectS3(bucket string, region string, public bool) *S3 {
 	bkt := conn.Bucket(bucket)
 
 	return &S3{
-		Auth:       auth,
-		Region:     awsRegion,
-		Bucket:     bkt,
-		Connection: conn,
-		ACL:        acl,
+		Auth:   auth,
+		Region: awsRegion,
+		bucket: bkt,
+		conn:   conn,
+		ACL:    acl,
 	}
 }
 
 func (s *S3) CreateBucket() {
-	if err := s.Bucket.PutBucket(s.ACL); err != nil {
+	if err := s.bucket.PutBucket(s.ACL); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -74,7 +74,7 @@ func (s *S3) uploadPackage(pkg *Package) {
 		Meta: metadataToMap(*pkg.Metadata),
 	}
 
-	if err := s.Bucket.Put(pkg.Path, pkg.Content, fileType, s.ACL, opts); err != nil {
+	if err := s.bucket.Put(pkg.Path, pkg.Content, fileType, s.ACL, opts); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Uploaded %s\n", pkg.Path)
@@ -84,14 +84,14 @@ func (s *S3) uploadPackageIndex(index *Index) {
 	path := fmt.Sprintf("%s/Packages.gz", index.Path)
 	fileType := http.DetectContentType(index.Content)
 	opts := s3.Options{}
-	if err := s.Bucket.Put(path, index.Content, fileType, s.ACL, opts); err != nil {
+	if err := s.bucket.Put(path, index.Content, fileType, s.ACL, opts); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Uploaded Package Index %s/Packages.gz\n", index.Path)
 }
 
 func (s *S3) getBucketContents() *map[string]s3.Key {
-	contents, err := s.Bucket.GetBucketContents()
+	contents, err := s.bucket.GetBucketContents()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func (s *S3) getBucketContents() *map[string]s3.Key {
 
 func (s *S3) getObjectHeaders(object string) http.Header {
 	headers := map[string][]string{}
-	response, err := s.Bucket.Head(object, headers)
+	response, err := s.bucket.Head(object, headers)
 	if err != nil {
 		log.Fatal(err)
 	}

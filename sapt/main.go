@@ -32,19 +32,19 @@ func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	// Bootstrap new repo
 	case bootstrap.FullCommand():
-		s3Conn := sapt.ConnectS3(*bootstrapBucket, *bootstrapRegion, *bootstrapPublic)
+		s3Conn := sapt.NewS3Connection(*bootstrapBucket, *bootstrapRegion, *bootstrapPublic)
 		s3Conn.CreateBucket()
 		sapt.ScanBucketPackages(s3Conn)
 
 	// Upload packages
 	case upload.FullCommand():
-		s3Conn := sapt.ConnectS3(*uploadBucket, *uploadRegion, *uploadPublic)
+		s3Conn := sapt.NewS3Connection(*uploadBucket, *uploadRegion, *uploadPublic)
 		sapt.UploadPackages(*uploadRoot, *uploadRm, s3Conn)
 		sapt.ScanBucketPackages(s3Conn)
 
 	// Rescan s3 and upload new apt data
 	case rescan.FullCommand():
-		s3Conn := sapt.ConnectS3(*rescanBucket, *rescanRegion, *rescanPublic)
+		s3Conn := sapt.NewS3Connection(*rescanBucket, *rescanRegion, *rescanPublic)
 		sapt.ScanBucketPackages(s3Conn)
 	}
 }
