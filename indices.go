@@ -21,8 +21,18 @@ SHA1: {{.SHA1}}
 SHA256: {{.SHA256}}
 Size: {{.Size}}
 Installed-Size: {{.InstalledSize}}
-{{if .Architecture}}Architecture: {{.Architecture}}{{printf "\n"}}{{end}}{{if .Depends}}Depends: {{.Depends}}{{printf "\n"}}{{end}}{{if .Recommends}}Recommends: {{.Recommends}}{{printf "\n"}}{{end}}{{if .Conflicts}}Conflicts: {{.Conflicts}}{{printf "\n"}}{{end}}{{if .License}}License: {{.License}}{{printf "\n"}}{{end}}{{if .Vendor}}Vendor: {{.Vendor}}{{printf "\n"}}{{end}}{{if .Maintainer}}Maintainer: {{.Maintainer}}{{printf "\n"}}{{end}}{{if .Section}}Section: {{.Section}}{{printf "\n"}}{{end}}{{if .Priority}}Priority: {{.Priority}}{{printf "\n"}}{{end}}{{if .Homepage}}Homepage: {{.Homepage}}{{printf "\n"}}{{end}}{{if .Description}}Description: {{.Description}}{{printf "\n"}}{{end}}
-{{end}}`
+{{ if .Architecture }}{{ printf "Architecture: %s\n" .Architecture }}{{ end -}}
+{{ if .Depends }}{{ printf "Depends: %s\n" .Depends }}{{ end -}}
+{{ if .Recommends }}{{ printf "Recommends: %s\n" .Recommends }}{{ end -}}
+{{ if .Conflicts }}{{ printf "Conflicts: %s\n" .Conflicts }}{{ end -}}
+{{ if .License }}{{ printf "License: %s\n" .License}}{{ end -}}
+{{ if .Vendor }}{{ printf "Vendor: %s\n" .Vendor }}{{ end -}}
+{{ if .Maintainer }}{{ printf "Maintainer: %s\n" .Maintainer }}{{ end -}}
+{{ if .Section }}{{ printf "Section: %s\n" .Section }}{{ end -}}
+{{ if .Priority }}{{ printf "Priority: %s\n" .Priority }}{{ end -}}
+{{ if .Homepage }}{{ printf "Homepage: %s\n" .Homepage }}{{ end -}}
+{{ if .Description }}{{ printf "Description: %s\n" .Description }}{{ end -}}
+{{ printf "\n" }}{{end}}`
 
 type Index struct {
 	Path    string
